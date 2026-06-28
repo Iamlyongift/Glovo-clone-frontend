@@ -1,6 +1,8 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import ProtectedRoute from './routes/ProtectedRoute';
+import Navbar from './components/Navbar';
+import Landing from './pages/Landing';
 
 // Auth
 import Login from './pages/auth/Login';
@@ -25,85 +27,68 @@ import AdminUsers from './pages/admin/AdminUsers';
 import AdminVendors from './pages/admin/AdminVendors';
 import AdminOrders from './pages/admin/AdminOrders';
 
-// Shared
-import Navbar from './components/Navbar';
 import Unauthorized from './pages/Unauthorized';
 
-export default function App() {
+function AppContent() {
+  const location = useLocation();
+  const hideNavbar = ['/', '/login', '/register'].includes(location.pathname);
+
   return (
     <>
       <Toaster position="top-right" />
-      <Navbar />
+      {!hideNavbar && <Navbar />}
       <Routes>
         {/* Public */}
+        <Route path="/" element={<Landing />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/unauthorized" element={<Unauthorized />} />
-        <Route path="/" element={<Navigate to="/home" replace />} />
 
         {/* Customer */}
         <Route path="/home" element={
-          <ProtectedRoute roles={['CUSTOMER']}>
-            <Home />
-          </ProtectedRoute>
+          <ProtectedRoute roles={['CUSTOMER']}><Home /></ProtectedRoute>
         } />
         <Route path="/vendors/:id" element={
-          <ProtectedRoute roles={['CUSTOMER']}>
-            <VendorDetail />
-          </ProtectedRoute>
+          <ProtectedRoute roles={['CUSTOMER']}><VendorDetail /></ProtectedRoute>
         } />
         <Route path="/cart" element={
-          <ProtectedRoute roles={['CUSTOMER']}>
-            <Cart />
-          </ProtectedRoute>
+          <ProtectedRoute roles={['CUSTOMER']}><Cart /></ProtectedRoute>
         } />
         <Route path="/my-orders" element={
-          <ProtectedRoute roles={['CUSTOMER']}>
-            <MyOrders />
-          </ProtectedRoute>
+          <ProtectedRoute roles={['CUSTOMER']}><MyOrders /></ProtectedRoute>
         } />
 
         {/* Vendor */}
         <Route path="/vendor/dashboard" element={
-          <ProtectedRoute roles={['VENDOR']}>
-            <VendorDashboard />
-          </ProtectedRoute>
+          <ProtectedRoute roles={['VENDOR']}><VendorDashboard /></ProtectedRoute>
         } />
         <Route path="/vendor/menu" element={
-          <ProtectedRoute roles={['VENDOR']}>
-            <MenuManager />
-          </ProtectedRoute>
+          <ProtectedRoute roles={['VENDOR']}><MenuManager /></ProtectedRoute>
         } />
 
         {/* Courier */}
         <Route path="/courier/orders" element={
-          <ProtectedRoute roles={['COURIER']}>
-            <AvailableOrders />
-          </ProtectedRoute>
+          <ProtectedRoute roles={['COURIER']}><AvailableOrders /></ProtectedRoute>
         } />
         <Route path="/courier/deliveries" element={
-          <ProtectedRoute roles={['COURIER']}>
-            <MyDeliveries />
-          </ProtectedRoute>
+          <ProtectedRoute roles={['COURIER']}><MyDeliveries /></ProtectedRoute>
         } />
 
         {/* Admin */}
         <Route path="/admin/users" element={
-          <ProtectedRoute roles={['ADMIN']}>
-            <AdminUsers />
-          </ProtectedRoute>
+          <ProtectedRoute roles={['ADMIN']}><AdminUsers /></ProtectedRoute>
         } />
         <Route path="/admin/vendors" element={
-          <ProtectedRoute roles={['ADMIN']}>
-            <AdminVendors />
-          </ProtectedRoute>
+          <ProtectedRoute roles={['ADMIN']}><AdminVendors /></ProtectedRoute>
         } />
         <Route path="/admin/orders" element={
-          <ProtectedRoute roles={['ADMIN']}>
-            <AdminOrders />
-          </ProtectedRoute>
+          <ProtectedRoute roles={['ADMIN']}><AdminOrders /></ProtectedRoute>
         } />
       </Routes>
     </>
   );
+}
+
+export default function App() {
+  return <AppContent />;
 }

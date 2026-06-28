@@ -5,3 +5,13 @@
   --color-dark: #1A1A2E;
   --color-light: #F8F9FA;
 }
+
+@layer base {
+  body {
+    background-color: #F0F2F5;
+    background-image:
+      radial-gradient(circle at 20% 50%, rgba(255, 107, 53, 0.04) 0%, transparent 50%),
+      radial-gradient(circle at 80% 20%, rgba(26, 26, 46, 0.04) 0%, transparent 50%);
+    min-height: 100vh;
+  }
+}
