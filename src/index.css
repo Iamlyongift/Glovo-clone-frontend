@@ -14,4 +14,9 @@
       radial-gradient(circle at 80% 20%, rgba(26, 26, 46, 0.04) 0%, transparent 50%);
     min-height: 100vh;
   }
+
+  @keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
 }
