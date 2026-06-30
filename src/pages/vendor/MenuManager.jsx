@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { getVendors, addMenuItem } from '../../api/vendors';
+import { getMyVendor, addMenuItem } from '../../api/vendors';
 import { uploadImage } from '../../api/cloudinary';
 import { useAuth } from '../../context/AuthContext';
 import { Plus, UtensilsCrossed, ImagePlus, X } from 'lucide-react';
@@ -18,11 +18,11 @@ export default function MenuManager() {
   });
 
   useEffect(() => {
-    getVendors()
-      .then((res) => setVendor(res.data[0] || null))
-      .catch(() => toast.error('Failed to load vendor'))
-      .finally(() => setLoading(false));
-  }, []);
+  getMyVendor()
+    .then((res) => setVendor(res.data))
+    .catch(() => toast.error('Failed to load your vendor profile'))
+    .finally(() => setLoading(false));
+}, []);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -53,29 +53,32 @@ export default function MenuManager() {
     setForm((prev) => ({ ...prev, imageUrl: '' }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!vendor) return;
-    setSubmitting(true);
-    try {
-      const res = await addMenuItem(vendor.id, {
-        ...form,
-        price: parseFloat(form.price),
-      });
-      setVendor((prev) => ({
-        ...prev,
-        menuItems: [...(prev.menuItems || []), res.data],
-      }));
-      toast.success(`${form.name} added to menu!`);
-      setForm({ name: '', description: '', price: '', imageUrl: '' });
-      setPreview(null);
-      setShowForm(false);
-    } catch (err) {
-      toast.error(err.response?.data?.error || 'Failed to add item');
-    } finally {
-      setSubmitting(false);
-    }
-  };
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  if (!vendor) {
+    toast.error('No vendor profile found. Please create your restaurant profile first.');
+    return;
+  }
+  setSubmitting(true);
+  try {
+    const res = await addMenuItem(vendor.id, {
+      ...form,
+      price: parseFloat(form.price),
+    });
+    setVendor((prev) => ({
+      ...prev,
+      menuItems: [...(prev.menuItems || []), res.data],
+    }));
+    toast.success(`${form.name} added to menu!`);
+    setForm({ name: '', description: '', price: '', imageUrl: '' });
+    setPreview(null);
+    setShowForm(false);
+  } catch (err) {
+    toast.error(err.response?.data?.error || 'Failed to add item');
+  } finally {
+    setSubmitting(false);
+  }
+};
 
   if (loading) {
     return (
