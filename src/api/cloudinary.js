@@ -1,5 +1,5 @@
-const CLOUD_NAME = 'your_cloud_name';    // replace
-const UPLOAD_PRESET = 'your_preset_name'; // replace
+const CLOUD_NAME = "dsn2tjq5l";
+const UPLOAD_PRESET = "glovo_preset";
 
 export const uploadImage = async (file) => {
   const formData = new FormData();
