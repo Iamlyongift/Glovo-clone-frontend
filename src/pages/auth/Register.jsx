@@ -1,19 +1,19 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { useAuth } from '../../context/AuthContext';
-import { register } from '../../api/auth';
-import toast from 'react-hot-toast';
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/AuthContext";
+import { register } from "../../api/auth";
+import toast from "react-hot-toast";
 
 export default function Register() {
   const { loginUser } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
-    fullName: '',
-    email: '',
-    password: '',
-    phoneNumber: '',
-    role: 'CUSTOMER',
+    fullName: "",
+    email: "",
+    password: "",
+    phoneNumber: "",
+    role: "CUSTOMER",
   });
 
   const handleChange = (e) => {
@@ -29,14 +29,31 @@ export default function Register() {
       toast.success(`Account created! Welcome, ${res.data.fullName}!`);
 
       switch (res.data.role) {
-        case 'CUSTOMER': navigate('/home'); break;
-        case 'VENDOR': navigate('/vendor/dashboard'); break;
-        case 'COURIER': navigate('/courier/orders'); break;
-        case 'ADMIN': navigate('/admin/users'); break;
-        default: navigate('/home');
+        case "CUSTOMER":
+          navigate("/home");
+          break;
+        case "VENDOR":
+          navigate("/vendor/dashboard");
+          break;
+        case "COURIER":
+          navigate("/courier/orders");
+          break;
+        case "ADMIN":
+          navigate("/admin/users");
+          break;
+        default:
+          navigate("/home");
       }
     } catch (err) {
-      toast.error(err.response?.data?.error || 'Registration failed. Try again.');
+      const message =
+        err.response?.data?.error ||
+        err.response?.data?.message ||
+        "Registration failed. Try again.";
+      toast.error(
+        typeof message === "string"
+          ? message
+          : "Registration failed. Try again.",
+      );
     } finally {
       setLoading(false);
     }
@@ -45,10 +62,11 @@ export default function Register() {
   return (
     <div className="min-h-screen bg-[#F8F9FA] flex items-center justify-center px-4 py-10">
       <div className="bg-white rounded-2xl shadow-lg w-full max-w-md p-8">
-
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-[#1A1A2E]">Create account 🚀</h1>
+          <h1 className="text-3xl font-bold text-[#1A1A2E]">
+            Create account 🚀
+          </h1>
           <p className="text-gray-500 mt-2 text-sm">Join Glovo Clone today</p>
         </div>
 
@@ -121,7 +139,8 @@ export default function Register() {
               name="role"
               value={form.role}
               onChange={handleChange}
-              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition bg-white">
+              className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-transparent transition bg-white"
+            >
               <option value="CUSTOMER">Customer — I want to order food</option>
               <option value="VENDOR">Vendor — I own a restaurant</option>
               <option value="COURIER">Courier — I deliver orders</option>
@@ -131,15 +150,19 @@ export default function Register() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-[#FF6B35] hover:bg-[#E8541A] disabled:opacity-60 text-white font-semibold py-3 rounded-xl transition text-sm">
-            {loading ? 'Creating account...' : 'Create Account'}
+            className="w-full bg-[#FF6B35] hover:bg-[#E8541A] disabled:opacity-60 text-white font-semibold py-3 rounded-xl transition text-sm"
+          >
+            {loading ? "Creating account..." : "Create Account"}
           </button>
         </form>
 
         {/* Footer */}
         <p className="text-center text-sm text-gray-500 mt-6">
-          Already have an account?{' '}
-          <Link to="/login" className="text-[#FF6B35] font-semibold hover:underline">
+          Already have an account?{" "}
+          <Link
+            to="/login"
+            className="text-[#FF6B35] font-semibold hover:underline"
+          >
             Login here
           </Link>
         </p>
